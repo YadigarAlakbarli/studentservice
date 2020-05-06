@@ -11,6 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import java.util.List;
 import java.util.Set;
 
 
@@ -34,24 +39,31 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Student> saveStudent( @RequestBody Student student){
+    public ResponseEntity<Student> saveStudent(@Valid @RequestBody Student student){
         return  ResponseEntity.ok(stdService.saveStudent(student));
     }
 
     @GetMapping("/findbyemail/{email}")
-    public Student findByEmail(@PathVariable("email") String email){
+    public Student findByEmail(@PathVariable("email") @Email(message ="MethodArgumentNotValidException")  String email){
         return stdService.findByEmail(email);
     }
     @GetMapping("/greatage/{age}")
     @ApiOperation(value ="This Method return great age from custom Students of age list")
-    public Set<Student> studentFilterByAge(@PathVariable("age") Integer age){
+    public Set<Student> studentFilterByAge(@PathVariable("age") @Valid @Min(value = 12,
+            message = "age must be greater than or equal to 12")  Integer age){
         return stdService.studentFilterByAge(age);
+    }
+
+
+    @GetMapping("getall")
+    public List<Student> getAll(){
+        return stdService.getAll();
     }
 
     @GetMapping("/delete/{id}")
     @HystrixCommand(fallbackMethod="fallbackDeleteById")
     public Student deleteById(@PathVariable("id") Integer id){
-        if(id<5){
+        if(id<20){
             //Test Hystrix
             throw new ArrayIndexOutOfBoundsException();
         }

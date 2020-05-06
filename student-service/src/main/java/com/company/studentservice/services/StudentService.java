@@ -5,6 +5,7 @@ import com.company.studentservice.repo.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -18,6 +19,10 @@ public class StudentService {
 
     public Student findByEmail(String email){
         return stdRepo.findByEmail(email).orElse(new Student());
+    }
+
+    public List<Student> getAll(){
+        return stdRepo.findAll();
     }
 
     public Set<Student> studentFilterByAge(Integer age){
