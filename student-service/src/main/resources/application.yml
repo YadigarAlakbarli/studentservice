@@ -1,0 +1,39 @@
+server:
+  port: 8081
+
+
+spring:
+  application:
+    name: student-service
+
+#Basic Spring Boot Config for Oracle
+  datasource:
+    username: HR
+    password: 0
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+
+
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle10gDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+#Basic Spring Boot Config for Eureka-Client
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.int}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
